@@ -302,27 +302,65 @@ class PresensiController extends Controller
         return view('presensi.laporan',compact('namabulan','karyawan'));
     }
 
-    public function cetaklaporan(Request $request){
-        $nik = $request->nik;
-        $bulan = $request->bulan;
-        $tahun = $request->tahun;
-        $namabulan = [
-            "",
-            "Januari","Februari","Maret","April","Mei","Juni",
-            "Juli","Agustus","September","Oktober","November","Desember"
-        ];
-        $karyawan = DB::table('karyawan')->where('nik',$nik)
+    public function cetaklaporan(Request $request)
+{
+    $nik = $request->nik;
+    $bulan = $request->bulan;
+    $tahun = $request->tahun;
+
+    $namabulan = [
+        "",
+        "Januari","Februari","Maret","April","Mei","Juni",
+        "Juli","Agustus","September","Oktober","November","Desember"
+    ];
+
+    $karyawan = DB::table('karyawan')
         ->join('departemen','karyawan.kode_dept','=','departemen.kode_dept')
+        ->where('karyawan.nik',$nik)
         ->first();
 
-        $presensi = DB::table('presensi')
-        ->where('nik', $nik)
-        ->whereRaw('MONTH(tgl_presensi)="'.$bulan.'"')
-        ->whereRaw('YEAR(tgl_presensi)="'.$tahun.'"')
+    $presensi = DB::table('presensi')
+        ->where('nik',$nik)
+        ->whereMonth('tgl_presensi',$bulan)
+        ->whereYear('tgl_presensi',$tahun)
         ->orderBy('tgl_presensi')
         ->get();
-        return view('presensi.cetaklaporan',compact('bulan','tahun','namabulan','karyawan','presensi'));
+
+    // EXPORT EXCEL
+    if ($request->has('export')) {
+
+        $filename = "Laporan Presensi Karyawan" . date('d-m-Y') . ".xls";
+
+        return response()
+            ->view(
+                'presensi.cetaklaporanexcel',
+                compact(
+                    'bulan',
+                    'tahun',
+                    'namabulan',
+                    'karyawan',
+                    'presensi'
+                )
+            )
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header(
+                'Content-Disposition',
+                'attachment; filename="'.$filename.'"'
+            );
     }
+
+    // CETAK BIASA
+    return view(
+        'presensi.cetaklaporan',
+        compact(
+            'bulan',
+            'tahun',
+            'namabulan',
+            'karyawan',
+            'presensi'
+        )
+    );
+}
 
     public function rekap(){
         $namabulan = [
@@ -382,6 +420,19 @@ class PresensiController extends Controller
         ->whereRaw('YEAR(tgl_presensi)="'.$tahun.'"')
         ->groupByRaw('presensi.nik, nama_lengkap')
         ->get();
+
+       if ($request->has('export')) {
+
+    $filename = "Rekap Presensi" . date('d-m-Y') . ".xls";
+
+    return response()
+        ->view(
+            'presensi.cetakrekap',
+            compact('rekap','bulan','tahun','namabulan')
+        )
+        ->header('Content-Type', 'application/vnd.ms-excel')
+        ->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
+}
 
         return view('presensi.cetakrekap', compact('rekap','bulan','tahun', 'namabulan'));
     }

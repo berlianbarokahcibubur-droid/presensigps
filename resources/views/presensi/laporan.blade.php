@@ -36,8 +36,9 @@
                     <div class="card-body p-4">
 
                         <form action="/presensi/cetaklaporan"
-                              target="_blank"
-                              method="POST">
+                            id="frmLaporan"
+                            target="_blank"
+                            method="POST">
 
                             @csrf
 
@@ -178,7 +179,8 @@
                                 <div class="col-6">
 
                                     <button type="submit"
-                                            name="exportexcel"
+                                            name="export"
+                                            value="1"
                                             class="btn btn-success w-100">
 
                                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -195,35 +197,75 @@
                                             <path stroke="none"
                                                   d="M0 0h24v24H0z"
                                                   fill="none"/>
-
                                             <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/>
-
                                             <path d="M7 11l5 5l5 -5"/>
-
                                             <path d="M12 4l0 12"/>
-
                                         </svg>
-
                                         Export Excel
-
                                     </button>
-
                                 </div>
-
                             </div>
-
                         </form>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 @endsection
+@push('myscript')
+<script>
+$(function () {
+
+    $("#frmLaporan").submit(function (e) {
+
+        var bulan = $("#bulan").val();
+        var tahun = $("#tahun").val();
+        var nik = $("#nik").val();
+
+        if (bulan == "") {
+
+            Swal.fire({
+                title: 'Warning!',
+                text: 'Bulan Harus Dipilih',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                $("#bulan").focus();
+            });
+
+            return false;
+
+        } else if (tahun == "") {
+
+            Swal.fire({
+                title: 'Warning!',
+                text: 'Tahun Harus Dipilih',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                $("#tahun").focus();
+            });
+
+            return false;
+
+        } else if (nik == "") {
+
+            Swal.fire({
+                title: 'Warning!',
+                text: 'Karyawan Harus Dipilih',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                $("#nik").focus();
+            });
+
+            return false;
+        }
+
+    });
+
+});
+</script>
+@endpush

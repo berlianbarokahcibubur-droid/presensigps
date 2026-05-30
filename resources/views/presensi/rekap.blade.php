@@ -18,17 +18,19 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body p-4">
                         <form action="/presensi/cetakrekap"
-                              target="_blank"
-                              method="POST">
+                            id="frmRekap"
+                            target="_blank"
+                            method="POST">
                             @csrf
                             {{-- BULAN --}}
                             <div class="mb-3">
                                 <label class="form-label">
                                     Pilih Bulan
                                 </label>
-                                <select name="bulan"
-                                        id="bulan"
-                                        class="form-select">
+                                <select
+                                    name="bulan"
+                                    id="bulan"
+                                    class="form-select">
                                     <option value="">
                                         Bulan
                                     </option>
@@ -93,8 +95,9 @@
                                 {{-- EXPORT EXCEL --}}
                                 <div class="col-6">
                                     <button type="submit"
-                                            name="exportexcel"
-                                            class="btn btn-success w-100">
+                                    name="export"
+                                    value="1"
+                                    class="btn btn-success w-100">
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              width="24"
                                              height="24"
@@ -124,3 +127,37 @@
     </div>
 </div>
 @endsection
+
+@push('myscript')
+<script>
+$(function () {
+    $("#frmRekap").submit(function (e) {
+        var bulan = $("#bulan").val();
+        var tahun = $("#tahun").val();
+        if (bulan == "") {
+            Swal.fire({
+                title: 'Warning!',
+                text: 'Bulan Harus Dipilih',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                $("#bulan").focus();
+            });
+            return false;
+        }
+        if (tahun == "") {
+            Swal.fire({
+                title: 'Warning!',
+                text: 'Tahun Harus Dipilih',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                $("#tahun").focus();
+            });
+            return false;
+        }
+        return true;
+    });
+});
+</script>
+@endpush

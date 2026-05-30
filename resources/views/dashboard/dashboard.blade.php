@@ -1,6 +1,22 @@
     @extends('layouts.presensi')
     @section('content')
+    <style>
+        .logout{
+            position: absolute;
+            color: white;
+            font-size: 30px;
+            text-decoration: none;
+            right: 8px;
+        }
+
+        .logout:hover{
+            color: white;
+        }
+    </style>
         <div class="section" id="user-section">
+            <a href="/proseslogout" class="logout">
+                <ion-icon name="exit-outline"></ion-icon>
+            </a>
                 <div id="user-detail">
                     <div class="avatar">
                         <img src="assets/img/sample/avatar/avatar1.jpg" alt="avatar" class="imaged w64 rounded">
