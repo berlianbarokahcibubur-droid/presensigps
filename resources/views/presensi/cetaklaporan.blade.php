@@ -71,7 +71,7 @@
     <table style="width: 100%">
         <tr>
             <td style="width: 30px">
-                <img src="{{ asset('assets/img/logo-satu8.JPG') }}" width="70" height="70" alt="">
+                <img src="{{ asset('assets/img/logo-bbb.JPG') }}" width="70" height="70" alt="">
             </td>
             <td>
                 <span id="title">
